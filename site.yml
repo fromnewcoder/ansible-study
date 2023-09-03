@@ -28,9 +28,9 @@
  
   - name: install terraform
     unarchive:
-      src: https://releases.hashicorp.com/terraform/0.12.28/terraform_0.12.28_linux_amd64.zip
+      src: terraform_0.12.28_linux_amd64.zip
       dest: /usr/local/bin
-      remote_src: yes
+      remote_src: no
       mode: 0755
       owner: jim
       group: jim

@@ -1,0 +1,35 @@
+ ---
+ 
+ - hosts: all
+   become: true
+   pre_tasks:
+ 
+   - name: update repository index (CentOS)
+     tags: always
+     dnf:
+       update_cache: yes
+     changed_when: false
+     when: ansible_distribution == "CentOS"
+ 
+   - name: update repository index (Ubuntu)
+     tags: always
+     apt:
+       update_cache: yes
+     changed_when: false
+     when: ansible_distribution == "Ubuntu"
+
+   - name: update repository index (Alpine)
+     tags: always
+     community.general.apk:
+       update_cache: yes
+     changed_when: false
+     when: ansible_distribution == "Alpine"
+ 
+ - hosts: all
+   become: true
+   tasks:
+ 
+   - name: add ssh key for simone
+     authorized_key:
+       user: simone
+       key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCwzVUO4VF+9UWtM0Ot8Yb7LjokV8jSx+oVQPLZM0DQwu3Vsxg+shUM7j   - name: add sudoers file for simo       src: su
