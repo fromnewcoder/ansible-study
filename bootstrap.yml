@@ -1,47 +1,45 @@
- ---
+---
  
- - hosts: all
-   become: true
-   pre_tasks:
+- hosts: all
+  become: true
+  pre_tasks:
+  - name: install updates (CentOS)
+    tags: always
+    dnf:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
  
-   - name: install updates (CentOS)
-     tags: always
-     dnf:
-       update_only: yes
-       update_cache: yes
-     when: ansible_distribution == "CentOS"
+  - name: install updates (Ubuntu)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+  - name: update repository index (Alpine)
+    tags: always
+    community.general.apk:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Alpine"
  
-   - name: install updates (Ubuntu)
-     tags: always
-     apt:
-       upgrade: dist
-       update_cache: yes
-     when: ansible_distribution == "Ubuntu"
-   - name: update repository index (Alpine)
-     tags: always
-     community.general.apk:
-       update_cache: yes
-     changed_when: false
-     when: ansible_distribution == "Alpine"
+- hosts: all
+  become: true
+  tasks:
+  - name: create simone user
+    user:
+      name: simone
+      groups: root
  
- - hosts: all
-   become: true
-   tasks:
- 
-   - name: create simone user
-     user:
-       name: simone
-       groups: root
- 
-   - name: add ssh key for simone
-     authorized_key:
-       user: simone
-       key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCwzVUO4VF+9UWtM0Ot8Yb7LjokV8jSx+oVQPLZM0DQwu3Vsxg+shUM7jx9SPnvsRLIA35DLx7Vs2k7CClR7yVbCQwXzAHNjWuytifqEYY8YLPv3nWScZ5m9nmLCumqcUnPMkJhRgx6WhBZeGNkd6FAF23Ol6rhtSbhttcmIpIQthwI1LHH9LXPnS+WDtvqA3pPU6fNz+XEUgOzPVsDu+I6fw+KuWmGEAut9gxRzSl1qF29iJJD0rnIQhOw4JmxusfKjobjo/br8bdw+C8Zna+KTN3IgHLLvf4Zd1rSlkdN9f0g5CpACjykX/b5+htvMavKJDz9XGJ9fKerWWY1bkMGOEpAnGAqSOQ8akvOcINa4gQ5scGpgOL7iKuJvrUhdpAlNCcimImmmKLB+yKiTu2GGJyruDjTDAd5Fw9KXRIgNkctAQhggkzvghIFLRmB/bEPtjvNaPFvsXYPMx6BNd6XU2Gxc/4qequYpalMIqJP5zOeWkssQmor7+nDtAfChfk= root@workstation"
+  - name: add ssh key for simone
+    authorized_key:
+      user: simone
+      key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCwzVUO4VF+9UWtM0Ot8Yb7LjokV8jSx+oVQPLZM0DQwu3Vsxg+shUM7jx9SPnvsRLIA35DLx7Vs2k7CClR7yVbCQwXzAHNjWuytifqEYY8YLPv3nWScZ5m9nmLCumqcUnPMkJhRgx6WhBZeGNkd6FAF23Ol6rhtSbhttcmIpIQthwI1LHH9LXPnS+WDtvqA3pPU6fNz+XEUgOzPVsDu+I6fw+KuWmGEAut9gxRzSl1qF29iJJD0rnIQhOw4JmxusfKjobjo/br8bdw+C8Zna+KTN3IgHLLvf4Zd1rSlkdN9f0g5CpACjykX/b5+htvMavKJDz9XGJ9fKerWWY1bkMGOEpAnGAqSOQ8akvOcINa4gQ5scGpgOL7iKuJvrUhdpAlNCcimImmmKLB+yKiTu2GGJyruDjTDAd5Fw9KXRIgNkctAQhggkzvghIFLRmB/bEPtjvNaPFvsXYPMx6BNd6XU2Gxc/4qequYpalMIqJP5zOeWkssQmor7+nDtAfChfk= root@workstation"
       
-   - name: add sudoers file for simone
-     copy:
-       src: sudoer_simone
-       dest: /etc/sudoers.d/simone
-       owner: root
-       group: root
-       mode: 0440
+  - name: add sudoers file for simone
+    copy:
+      src: sudoer_simone
+      dest: /etc/sudoers.d/simone
+      owner: root
+      group: root
+      mode: 0440
