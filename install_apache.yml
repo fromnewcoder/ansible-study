@@ -5,6 +5,7 @@
   tasks:
 
   - name: update repository
+    when: ansible_distribution in ["Alpine"]
     community.general.apk:
       update_cache: yes
 
